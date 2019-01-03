@@ -27,6 +27,16 @@ class AppTodo extends React.Component{
         })
     }
 
+    updateTodo = (value, index) => {
+        this.setState ((prevState) => {
+            let newTodo = prevState.todo; 
+            newTodo[index] = value;
+            return {
+                todo: newTodo
+            }
+        })        
+    }
+
     render(){
         return(
             <div>
