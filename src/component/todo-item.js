@@ -1,16 +1,13 @@
 import React, {Component} from "react";
 
 class TodoItem extends Component{
-    constructor(props) {
-        super(props);
-    }
-    delete(key) {
-        console.log(this);
-        this.props.delTodo(key);
+    delete = (e) => {
+        var index = e.target.getAttribute('index');
+        this.props.delTodo(index);
     }
     render() {
         return (
-            <li onClick={() => this.delete(this.props.todo) }>{this.props.todo}</li>
+            <li>{this.props.todo}<button  onClick={this.delete} index={this.props.index}>X</button></li>
         )
     }
 }
