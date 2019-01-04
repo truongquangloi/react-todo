@@ -13,23 +13,32 @@ class TodoItem extends Component{
         this.setState (() => {
             return { mode : 'edit'}
         });
-        document.getElementsByName('todoEdit').setAttribute('value','abv');
-        //console.log(inputEdit);
-        //console.log(inputEdit[0]);
-        //inputEdit.value = this.state.value;
 
     }
     save = (e) => {
+        this.setState (() => {
+            return { mode : 'view'}
+        });
         var index = e.target.getAttribute('index');
-        var value = e.target.getAttribute('value');
-
-        this.props.update(value, index);
+        var value = this.state.value;
+        this.props.updateTodo(value, index);
     }
+
+    change = (e) => {
+        this.setState({
+            value: e.target.value
+        })
+    }
+
     render = () => {
         return (
             <li>
-                { this.state.mode == 'view' && <span> {this.props.todo} </span> }
-                { this.state.mode == 'edit' && <input value="" name="todoEdit" />}
+                { this.state.mode == 'view' && 
+                    <span> {this.props.todo} </span> 
+                }
+                { this.state.mode == 'edit' && 
+                    <input value={this.state.value} name="todoEdit" onChange={this.change} />
+                }
                 <button  onClick={this.delete} index={this.props.index}>X</button>
                 { this.state.mode == 'view' && 
                     <button index={this.props.index} onClick={this.edit} value={this.props.todo}>Edit</button> 

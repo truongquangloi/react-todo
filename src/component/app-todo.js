@@ -41,7 +41,7 @@ class AppTodo extends React.Component{
         return(
             <div>
                 <Header></Header>  
-                <TodoList key={this.state.todo} todos={this.state.todo} delTodo={this.delTodo}></TodoList>                          
+                <TodoList key={this.state.todo} todos={this.state.todo} delTodo={this.delTodo} updateTodo={this.updateTodo}></TodoList>                          
                 <AddTodo addTodo={this.addTodo}></AddTodo>
                 <Footer></Footer>
             </div>
