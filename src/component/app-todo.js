@@ -45,7 +45,15 @@ class AppTodo extends React.Component{
             }
         });
     }
-
+    changeStatus = (newStatus, todoIndex) => {
+        this.setState( (prevState) => {
+            let newTodo = prevState.todo;
+            newTodo[todoIndex].status = newStatus;
+            return {
+                todo: newTodo
+            }
+        })
+    }
     delTodo = (index) => {
         this.setState( (prevState) => {
             return {
@@ -68,7 +76,8 @@ class AppTodo extends React.Component{
         return(
             <div>
                 <Header></Header>  
-                <TodoList key={this.state.todo} todos={this.state.todo} delTodo={this.delTodo} updateTodo={this.updateTodo}></TodoList>                          
+                <TodoList key={this.state.todo} todos={this.state.todo} delTodo={this.delTodo} updateTodo={this.updateTodo}
+                changeStatus={this.changeStatus}></TodoList>                          
                 <AddTodo addTodo={this.addTodo}></AddTodo>
                 <Footer></Footer>
             </div>
