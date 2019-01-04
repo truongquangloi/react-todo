@@ -39,6 +39,7 @@ class TodoItem extends Component{
                 { this.state.mode == 'edit' && 
                     <input value={this.state.value} name="todoEdit" onChange={this.change} />
                 }
+                <small> {this.props.status} </small> 
                 <button  onClick={this.delete} index={this.props.index}>X</button>
                 { this.state.mode == 'view' && 
                     <button index={this.props.index} onClick={this.edit} value={this.props.todo}>Edit</button> 

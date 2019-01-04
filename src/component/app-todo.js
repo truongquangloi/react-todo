@@ -5,13 +5,40 @@ import TodoList from "./todo-list";
 import AddTodo from "./add-todo";
 import Footer from "./footer";
 
+const todoId = require('uuid/v4');
+var moment = require('moment');
+
 class AppTodo extends React.Component{
 
     state = {
-        todo: ['learn PHP', 'learn NodeJS', 'learn React']
+        todo: [
+            {
+                id: todoId(), 
+                status: 'todo',
+                action: 'learn PHP',
+                created_date: moment().format('YYYY-MM-DD')
+            },
+            {
+                id: todoId(), 
+                status: 'todo',
+                action: 'learn CSS',
+                created_date: moment().format('YYYY-MM-DD')
+            },
+            {
+                id: todoId(), 
+                status: 'todo',
+                action: 'learn React',
+                created_date: moment().format('YYYY-MM-DD')
+            }
+        ]
     };
-    
-    addTodo = (item) => {
+    addTodo = (value) => {
+        var item = {
+            id: todoId(), 
+            status: 'todo',
+            action: value,
+            created_date: moment().format('YYYY-MM-DD')
+        }
         this.setState((prevState) => {
             return {
                 todo: prevState.todo.concat(item)
@@ -30,14 +57,14 @@ class AppTodo extends React.Component{
     updateTodo = (value, index) => {
         this.setState ((prevState) => {
             let newTodo = prevState.todo; 
-            newTodo[index] = value;
+            newTodo[index].action = value;
             return {
                 todo: newTodo
             }
         })        
     }
 
-    render(){
+    render = () => {
         return(
             <div>
                 <Header></Header>  

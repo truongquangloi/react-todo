@@ -3,8 +3,8 @@ import React from "react";
 class AddTodo extends React.Component{
     todoSubmit = (e) => {
         e.preventDefault();
-        var newTodo = e.target.elements.todoName.value;   
-        this.props.addTodo(newTodo);   
+        var newValue = e.target.elements.todoName.value;   
+        this.props.addTodo(newValue);   
     }
     render(){
         return(
