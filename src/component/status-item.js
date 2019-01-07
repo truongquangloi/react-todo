@@ -5,7 +5,6 @@ class StatusItem extends React.Component{
         var newStatus = e.target.getAttribute('value');        
         var todoIndex = e.target.getAttribute('todo-index');
         this.props.changeStatus(newStatus, todoIndex);
-        console.log(this.props);
         this.props.changeModeEdit();
     }
     render = () => {        

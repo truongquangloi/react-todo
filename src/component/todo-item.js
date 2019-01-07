@@ -1,12 +1,38 @@
 import React, {Component} from "react";
 import StatusItem from "./status-item";
+import Modal from "react-modal";
+
+const customStyles = {
+    content : {
+      top                   : '50%',
+      left                  : '50%',
+      right                 : 'auto',
+      bottom                : 'auto',
+      marginRight           : '-50%',
+      transform             : 'translate(-50%, -50%)'
+    }
+};
 
 class TodoItem extends Component{
     state = {
         mode: 'view',
         value: this.props.todo,
         modeStatus: 'view',
-        statuses: ['todo', 'inprogress', 'done', 'cancel']
+        statuses: ['todo', 'inprogress', 'done', 'cancel'],
+        modalIsOpen: false
+    }
+
+    openModal() {
+        this.setState({modalIsOpen: true});
+    }
+    
+    afterOpenModal = () => {
+        // references are now sync'd and can be accessed.
+        //this.subtitle.style.color = '#f00';
+    }
+    
+    closeModal = () => {
+        this.setState({modalIsOpen: false});
     }
     delete = (e) => {
         var index = e.target.getAttribute('index');
@@ -36,7 +62,8 @@ class TodoItem extends Component{
     changeModeStatus = () => {
         this.setState ( () => {
             return { modeStatus: 'change' }
-        })
+        });
+        this.setState({modalIsOpen: true});
     }    
     changeModeEdit = () => {
         this.setState ( () => {
@@ -54,15 +81,20 @@ class TodoItem extends Component{
                 }
                 <small onClick={this.changeModeStatus}> {this.props.status} </small> 
                 { this.state.modeStatus == 'change' && 
-                    <ul>
+                    <Modal
+                    isOpen={this.state.modalIsOpen}
+                    onAfterOpen={this.afterOpenModal}
+                    onRequestClose={this.closeModal}
+                    style={customStyles}
+                    contentLabel="Example Modal"
+                  >
                     {
                         this.state.statuses.map((status, idx) =>(
                         <StatusItem key={status} status={status} index={idx} todoIndex={this.props.index} 
                         changeStatus={this.props.changeStatus} changeModeEdit={this.changeModeEdit}>
                         </StatusItem>))
                     }
-                    </ul>
-
+                  </Modal>                 
                 }
                 <button  onClick={this.delete} index={this.props.index}>X</button>
                 { this.state.mode == 'view' && 

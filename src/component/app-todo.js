@@ -5,8 +5,10 @@ import TodoList from "./todo-list";
 import AddTodo from "./add-todo";
 import Footer from "./footer";
 
+
 const todoId = require('uuid/v4');
 var moment = require('moment');
+//Modal.setAppElement('#app');
 
 class AppTodo extends React.Component{
 
