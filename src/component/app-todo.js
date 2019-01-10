@@ -8,7 +8,7 @@ import Footer from "./footer";
 const todoId = require('uuid/v4');
 var moment = require('moment');
 
-Modal.setAppElement('#app');
+//Modal.setAppElement('#app');
 
 class AppTodo extends React.Component{
 
