@@ -64,10 +64,11 @@ class AppTodo extends React.Component{
         })
     }
 
-    updateTodo = (value, index) => {
+    updateTodo = (index, value, status) => {
         this.setState ((prevState) => {
             let newTodo = prevState.todo; 
             newTodo[index].action = value;
+            newTodo[index].status = status;
             return {
                 todo: newTodo
             }

@@ -17,9 +17,9 @@ class TodoItem extends Component{
     state = {
         mode: 'view',
         value: this.props.todo,
-        modeStatus: 'view',
         statuses: ['todo', 'inprogress', 'done', 'cancel'],
-        modalIsOpen: false
+        modalIsOpen: false,
+        status: this.props.status
     }
 
     openModal() {
@@ -50,51 +50,36 @@ class TodoItem extends Component{
         });
         var index = e.target.getAttribute('index');
         var value = this.state.value;
-        this.props.updateTodo(value, index);
+        var status = this.state.status;
+        this.props.updateTodo(index, value, status);
     }
-
+    chooseStatus = (e) => {
+        var newStatus = (e.target.value);        
+        this.state.status = newStatus;
+    }
     change = (e) => {
         this.setState({
             value: e.target.value
         })
     }
-
-    changeModeStatus = () => {
-        this.setState ( () => {
-            return { modeStatus: 'change' }
-        });
-        this.setState({modalIsOpen: true});
-    }    
-    changeModeEdit = () => {
-        this.setState ( () => {
-            return { modeStatus: 'view' }
-        })
-    }
     render = () => {
         return (
             <li>
-                { this.state.mode == 'view' && 
-                    <span> {this.props.todo} </span> 
-                }
-                { this.state.mode == 'edit' && 
-                    <input value={this.state.value} name="todoEdit" onChange={this.change} />
-                }
-                <small onClick={this.changeModeStatus}> {this.props.status} </small> 
-                { this.state.modeStatus == 'change' && 
-                    <Modal
-                    isOpen={this.state.modalIsOpen}
-                    onAfterOpen={this.afterOpenModal}
-                    onRequestClose={this.closeModal}
-                    style={customStyles}
-                    contentLabel="Example Modal"
-                  >
-                    {
-                        this.state.statuses.map((status, idx) =>(
-                        <StatusItem key={status} status={status} index={idx} todoIndex={this.props.index} 
-                        changeStatus={this.props.changeStatus} changeModeEdit={this.changeModeEdit}>
-                        </StatusItem>))
-                    }
-                  </Modal>                 
+                { this.state.mode == 'view' ?
+                    (<span>
+                        <span> {this.props.todo} </span>
+                        <small onClick={this.changeModeStatus}> {this.props.status} </small>
+                    </span>)
+                    : (<span>
+                        <input value={this.state.value} name="todoEdit" onChange={this.change} />
+                        <select name="status" onChange={this.chooseStatus}>
+                            {
+                            this.state.statuses.map((status, idx) =>(
+                            <StatusItem key={status} status={status} index={idx} todoIndex={this.props.index} >
+                            </StatusItem>))
+                            }
+                        </select>
+                    </span>)
                 }
                 <button  onClick={this.delete} index={this.props.index}>X</button>
                 { this.state.mode == 'view' && 
