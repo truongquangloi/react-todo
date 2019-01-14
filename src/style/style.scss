@@ -1,7 +1,19 @@
 @import './base/setting'; 
 @import './base/base'; 
-
+ 
+@import './base/header'; 
+@import './base/todo-list';
+@import './base/add-todo';
+@import './base/footer'; 
+#app{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
 h3{
     font-size: 30px;
     color: $color;
+}
+.Button {
+    padding: 20px;
 }

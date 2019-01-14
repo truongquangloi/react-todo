@@ -1,0 +1,23 @@
+.todo-list{
+    background: $background;
+    list-style: none;
+    margin: 0;
+    padding: 60px 20px;
+    li{
+        cursor: pointer;
+        position: relative;
+        padding: 14px 8px 13px 40px;
+        background: #eee;
+        font-size: 18px;
+        transition: 0.2s;
+
+        /* make the list items unselectable */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    select {
+        padding: 8px 12px;
+    }
+}

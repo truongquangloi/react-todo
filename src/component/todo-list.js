@@ -4,7 +4,7 @@ import TodoItem from "./todo-item";
 class TodoList extends React.Component{    
     render = () => {
         return (
-            <ul>
+            <ul  className="todo-list" >
             {
                 this.props.todos.map((todoItem, idx) =>(
                 <TodoItem key={todoItem} todo={todoItem.action} status={todoItem.status} changeStatus={this.props.changeStatus}

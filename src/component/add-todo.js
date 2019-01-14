@@ -8,10 +8,10 @@ class AddTodo extends React.Component{
     }
     render(){
         return(
-            <div>
+            <div className="add-todo">
                 <form onSubmit={this.todoSubmit}>
                     <input type="text" name="todoName"></input>
-                    <button type="submit">OK</button>
+                    <button type="submit" className="btn-add">OK</button>
                 </form>
             </div>
         );

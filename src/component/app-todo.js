@@ -77,7 +77,7 @@ class AppTodo extends React.Component{
 
     render = () => {
         return(
-            <div>
+            <div className="container">
                 <Header></Header>  
                 <TodoList key={this.state.todo} todos={this.state.todo} delTodo={this.delTodo} updateTodo={this.updateTodo}
                 changeStatus={this.changeStatus}></TodoList>                          

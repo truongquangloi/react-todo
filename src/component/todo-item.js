@@ -81,13 +81,15 @@ class TodoItem extends Component{
                         </select>
                     </span>)
                 }
-                <button  onClick={this.delete} index={this.props.index}>X</button>
-                { this.state.mode == 'view' && 
-                    <button index={this.props.index} onClick={this.edit} value={this.props.todo}>Edit</button> 
-                }
-                { this.state.mode == 'edit' &&
-                    <button index={this.props.index} onClick={this.save} value={this.props.todo}>Save</button> 
-                }
+                <div className="pull-right">   
+                    <button  onClick={this.delete} index={this.props.index}>X</button>
+                    { this.state.mode == 'view' && 
+                        <button index={this.props.index} onClick={this.edit} value={this.props.todo}>Edit</button> 
+                    }
+                    { this.state.mode == 'edit' &&
+                        <button index={this.props.index} onClick={this.save} value={this.props.todo}>Save</button> 
+                    }
+                </div> 
             </li>
         )
     }
