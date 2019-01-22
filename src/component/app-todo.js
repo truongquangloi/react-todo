@@ -1,4 +1,5 @@
 import React from "react";
+import { loadTodos } from "../database/firebase";
 
 import Header from "./header";
 import TodoList from "./todo-list";
@@ -8,31 +9,10 @@ import Footer from "./footer";
 const todoId = require('uuid/v4');
 var moment = require('moment');
 
-//Modal.setAppElement('#app');
-
 class AppTodo extends React.Component{
-
+    // Initialize Cloud Firestore through Firebase
     state = {
-        todo: [
-            {
-                id: todoId(), 
-                status: 'todo',
-                action: 'learn PHP',
-                created_date: moment().format('YYYY-MM-DD')
-            },
-            {
-                id: todoId(), 
-                status: 'todo',
-                action: 'learn CSS',
-                created_date: moment().format('YYYY-MM-DD')
-            },
-            {
-                id: todoId(), 
-                status: 'todo',
-                action: 'learn React',
-                created_date: moment().format('YYYY-MM-DD')
-            }
-        ]
+        todo: []
     };
     addTodo = (value) => {
         var item = {
@@ -76,15 +56,27 @@ class AppTodo extends React.Component{
     }
 
     render = () => {
+        loadTodos().then( (data) => {
+            this.setState(() => {
+                return {
+                    todo: data
+                }
+            });
+        }).catch( (e) => {
+            console.log(e);
+            alert('có lỗi xảy ra');
+        });
+
         return(
             <div className="container">
                 <Header></Header>  
-                <TodoList key={this.state.todo} todos={this.state.todo} delTodo={this.delTodo} updateTodo={this.updateTodo}
+                <TodoList todos={this.state.todo} delTodo={this.delTodo} updateTodo={this.updateTodo}
                 changeStatus={this.changeStatus}></TodoList>                          
                 <AddTodo addTodo={this.addTodo}></AddTodo>
                 <Footer></Footer>
             </div>
         )
+        
     }
 }
 
