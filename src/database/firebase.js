@@ -78,3 +78,20 @@ export const loadTodos = () => {
         })
     }); 
 }
+
+export const createTodo = (item) => {
+    return new Promise((resolve, reject) => {
+        db.ref('todo').push({
+            action: item.action,
+            status: item.status,
+            id: item.id,
+            created_at: item.created_at
+        }).then( ()=> {
+            console.log(item);
+            return resolve(true);
+        }).catch( (e) => {
+            console.log (e);
+            return reject(e);
+        })
+    })
+} 

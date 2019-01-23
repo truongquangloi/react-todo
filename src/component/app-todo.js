@@ -1,5 +1,5 @@
 import React from "react";
-import { loadTodos } from "../database/firebase";
+import { loadTodos, createTodo } from "../database/firebase";
 
 import Header from "./header";
 import TodoList from "./todo-list";
@@ -19,8 +19,14 @@ class AppTodo extends React.Component{
             id: todoId(), 
             status: 'todo',
             action: value,
-            created_date: moment().format('YYYY-MM-DD')
+            created_at: moment().format('YYYY-MM-DD')
         }
+        createTodo(item).then(()=>{
+            alert('thêm thành công');
+        }).catch( (e) => {
+            console.log(e);
+            alert('có lỗi xảy ra');
+        })
         this.setState((prevState) => {
             return {
                 todo: prevState.todo.concat(item)
