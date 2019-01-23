@@ -68,9 +68,11 @@ export const loadTodos = () => {
     return new Promise( (resolve, reject) => {
         const todos = [];
         db.ref('todo').once('value')
-        .then((snapshot)=>{
+        .then((snapshot)=>{            
             snapshot.forEach((item)=>{
-                todos.push(item.val());
+                var todo = item.val();
+                todo.key = item.key;
+                todos.push(todo);
             })
             return resolve(todos);
         }).catch((e)=> {
@@ -95,3 +97,31 @@ export const createTodo = (item) => {
         })
     })
 } 
+
+export const updateTodo = (key, item) => {
+    return new Promise((resolve, reject) => {
+        db.ref('todo/'+key).update({
+            action: item.action,
+            status: item.status,
+        }).then( ()=> {
+            console.log(item);
+            return resolve(true);
+        }).catch( (e) => {
+            console.log (e);
+            return reject(e);
+        })
+    })
+}
+
+export const removeTodo = (id) => {
+    return new Promise((resolve, reject) => {
+        db.ref('todo/'+id).remove()
+        .then(() => {
+            return resolve(true);
+        }).catch((e)=> {
+            return reject(e);
+        })
+    })
+}
+
+

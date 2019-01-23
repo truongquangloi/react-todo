@@ -1,5 +1,5 @@
 import React from "react";
-import { loadTodos, createTodo } from "../database/firebase";
+import * as Firebase from "../database/firebase";
 
 import Header from "./header";
 import TodoList from "./todo-list";
@@ -21,17 +21,12 @@ class AppTodo extends React.Component{
             action: value,
             created_at: moment().format('YYYY-MM-DD')
         }
-        createTodo(item).then(()=>{
-            alert('thêm thành công');
+        Firebase.createTodo(item).then(()=>{
+            alert('Thêm thành công');
         }).catch( (e) => {
             console.log(e);
-            alert('có lỗi xảy ra');
+            alert('Có lỗi xảy ra');
         })
-        this.setState((prevState) => {
-            return {
-                todo: prevState.todo.concat(item)
-            }
-        });
     }
     changeStatus = (newStatus, todoIndex) => {
         this.setState( (prevState) => {
@@ -42,27 +37,29 @@ class AppTodo extends React.Component{
             }
         })
     }
-    delTodo = (index) => {
-        this.setState( (prevState) => {
-            return {
-                todo: prevState.todo.filter((item, itemIndex) =>  itemIndex != index )
-            }
+    delTodo = (id) => {
+        Firebase.removeTodo(id).then(()=>{
+            alert('Xóa thành công');
+        }).catch( (e) => {
+            console.log(e);
+            alert('Có lỗi xảy ra');
         })
     }
 
-    updateTodo = (index, value, status) => {
-        this.setState ((prevState) => {
-            let newTodo = prevState.todo; 
-            newTodo[index].action = value;
-            newTodo[index].status = status;
-            return {
-                todo: newTodo
-            }
-        })        
+    updateTodo = (key, value, status) => {
+        var item = {
+            status: status,
+            action: value,
+        }
+        Firebase.updateTodo(key, item).then(()=> {
+            alert('Thêm thành công');
+        }).catch(()=> {
+            alert('Có lỗi xảy ra');
+        });       
     }
 
     render = () => {
-        loadTodos().then( (data) => {
+        Firebase.loadTodos().then( (data) => {
             this.setState(() => {
                 return {
                     todo: data
@@ -70,7 +67,7 @@ class AppTodo extends React.Component{
             });
         }).catch( (e) => {
             console.log(e);
-            alert('có lỗi xảy ra');
+            alert('Có lỗi xảy ra');
         });
 
         return(

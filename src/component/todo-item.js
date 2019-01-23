@@ -35,8 +35,8 @@ class TodoItem extends Component{
         this.setState({modalIsOpen: false});
     }
     delete = (e) => {
-        var index = e.target.getAttribute('index');
-        this.props.delTodo(index);
+        var key = e.target.getAttribute('todoKey');
+        this.props.delTodo(key);
     }
     edit = (e) => {
         this.setState (() => {
@@ -48,10 +48,10 @@ class TodoItem extends Component{
         this.setState (() => {
             return { mode : 'view'}
         });
-        var index = e.target.getAttribute('index');
+        var key = e.target.getAttribute('todoKey');
         var value = this.state.value;
         var status = this.state.status;
-        this.props.updateTodo(index, value, status);
+        this.props.updateTodo(key, value, status);
     }
     chooseStatus = (e) => {
         var newStatus = (e.target.value);        
@@ -82,12 +82,12 @@ class TodoItem extends Component{
                     </span>)
                 }
                 <div className="pull-right">   
-                    <button  onClick={this.delete} index={this.props.index}>X</button>
+                    <button  onClick={this.delete} index={this.props.index} todoKey={this.props.todoKey}>X</button>
                     { this.state.mode == 'view' && 
-                        <button index={this.props.index} onClick={this.edit} value={this.props.todo}>Edit</button> 
+                        <button onClick={this.edit} value={this.props.todo}>Edit</button> 
                     }
                     { this.state.mode == 'edit' &&
-                        <button index={this.props.index} onClick={this.save} value={this.props.todo}>Save</button> 
+                        <button todoKey={this.props.todoKey} onClick={this.save} value={this.props.todo}>Save</button> 
                     }
                 </div> 
             </li>
