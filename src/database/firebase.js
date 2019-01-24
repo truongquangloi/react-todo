@@ -81,6 +81,24 @@ export const loadTodos = () => {
     }); 
 }
 
+export const pagination = (key, limit) => {
+    return new Promise( (resolve, reject) => {
+        const todos = [];
+        db.ref('todo').startAt(1).once('value')
+        .then((snapshot)=>{            
+            snapshot.forEach((item)=>{
+                console.log(item);
+                var todo = item.val();
+                todo.key = item.key;
+                todos.push(todo);
+            })
+            return resolve(todos);
+        }).catch((e)=> {
+            return reject(e);
+        })
+    }); 
+}
+
 export const createTodo = (item) => {
     return new Promise((resolve, reject) => {
         db.ref('todo').push({
