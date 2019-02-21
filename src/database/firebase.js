@@ -82,9 +82,10 @@ export const loadTodos = () => {
 }
 
 export const pagination = (start, limit) => {
+    console.log(start);
     return new Promise( (resolve, reject) => {
         const todos = [];
-        db.ref('todo').orderByValue().startAt(start).limitToLast(limit).once('value')
+        db.ref('todo').orderByValue().limitToFirst(limit).startAt(start).once('value')
         .then((snapshot)=>{            
             snapshot.forEach((item)=>{
                 var todo = item.val();

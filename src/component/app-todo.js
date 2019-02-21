@@ -58,13 +58,21 @@ class AppTodo extends React.Component{
   
     }
 
-    changeCurrentPage = (pageCurrent) => {
-        console.log(pageCurrent);
-        this.setState( (prevState) => {
-            return {
-                currentPage: pageCurrent
-            }
-        })
+    changeCurrentPage = (pageCurrent) => {    
+        console.log(pageCurrent)    ; 
+        Firebase.pagination((pageCurrent-1)*this.state.todosPerPage, pageCurrent*this.state.todosPerPage).then((data) => { 
+            console.log(data);
+            this.setState(() => {
+                return {
+                    currentPage: pageCurrent,
+                    todo: data
+                }
+            })
+        }).catch( (e) => {
+            console.log(e);
+            alert('Có lỗi xảy ra');
+        });
+        
     }
 
     addTodo = (value) => {
@@ -80,9 +88,10 @@ class AppTodo extends React.Component{
             Firebase.pagination((this.state.currentPage-1)*this.state.todosPerPage, this.state.currentPage*this.state.todosPerPage)
         ];
         Promise.all(promiseAdd).then((newData) => {
-            var total = newData[2].length;
+            console.log(newData);
+            var total = newData[1].length;
             var pageNumbers = [];
-            for (let i = 1; i <= Math.ceil(newData[2].length/this.state.todosPerPage); i++) {
+            for (let i = 1; i <= Math.ceil(newData[1].length/this.state.todosPerPage); i++) {
                 pageNumbers.push(i);
             }            
             alert('Thêm thành công');
@@ -90,7 +99,7 @@ class AppTodo extends React.Component{
                 return {
                     todoPages: pageNumbers,
                     total: total, 
-                    todo:  newData[3],
+                    todo:  newData[2],
                 }
             })
         }).catch( (e) => {
@@ -110,14 +119,22 @@ class AppTodo extends React.Component{
     delTodo = (id) => {
         var promiseDel = [
             Firebase.removeTodo(id),
+            Firebase.loadTodos(),
             Firebase.pagination((this.state.currentPage-1)*this.state.todosPerPage, this.state.currentPage*this.state.todosPerPage)
         ];
         Promise.all(promiseDel).then((newData) => {
             console.log(newData);
-            alert('Thêm thành công');
+            var total = newData[1].length;
+            var pageNumbers = [];
+            for (let i = 1; i <= Math.ceil(newData[1].length/this.state.todosPerPage); i++) {
+                pageNumbers.push(i);
+            }            
+            alert('xóa thành công');
             this.setState(() => {
                 return {
-                    todo: newData[1],
+                    todoPages: pageNumbers,
+                    total: total, 
+                    todo:  newData[2],
                 }
             })
         }).catch( (e) => {
@@ -137,7 +154,7 @@ class AppTodo extends React.Component{
         ];
         Promise.all(promiseDel).then((newData) => {
             console.log(newData);
-            alert('Thêm thành công');
+            alert('cập nhập thành công');
             this.setState(() => {
                 return {
                     todo: newData[1],
