@@ -1,0 +1,19 @@
+.pagination {
+    ul {
+        list-style: none;
+        text-align: right;
+        display: flex;
+    }
+    li {
+        display: inline-block;
+        border: 1px solid #eee; 
+        padding: 6px 12px;
+        border-radius: 4px;
+    }
+    li.current, li:hover{
+        background: rgba(63, 81, 181, 0.671);
+        color: #fff;
+        font-weight: 700;
+        cursor: pointer;
+    }
+}

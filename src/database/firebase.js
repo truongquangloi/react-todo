@@ -81,13 +81,12 @@ export const loadTodos = () => {
     }); 
 }
 
-export const pagination = (key, limit) => {
+export const pagination = (start, limit) => {
     return new Promise( (resolve, reject) => {
         const todos = [];
-        db.ref('todo').startAt(1).once('value')
+        db.ref('todo').orderByValue().startAt(start).limitToLast(limit).once('value')
         .then((snapshot)=>{            
             snapshot.forEach((item)=>{
-                console.log(item);
                 var todo = item.val();
                 todo.key = item.key;
                 todos.push(todo);

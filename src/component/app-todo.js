@@ -17,8 +17,56 @@ class AppTodo extends React.Component{
         todo: [],
         currentPage: 1,
         todosPerPage: 3,  
-        todoPages: 0,      
+        todoPages: [],      
     };
+
+    componentDidUpdate = () => {
+    }
+    componentDidMount = () => {
+        var pageNumbers = [];
+        var total = 1;
+        Firebase.loadTodos().then( (data) => {   
+            for (let i = 1; i <= Math.ceil(data.length/this.state.todosPerPage); i++) {
+                pageNumbers.push(i);
+            }
+            total = data.length;
+            return Firebase.pagination((this.state.currentPage-1)*this.state.todosPerPage, this.state.currentPage*this.state.todosPerPage);
+        }).then((data2) => { 
+            this.setState(() => {
+                return {
+                    todoPages: pageNumbers,
+                    total: total, 
+                    todo: data2
+                }
+            })
+
+        }).catch( (e) => {
+            console.log(e);
+            alert('Có lỗi xảy ra');
+        });
+
+        /*var promise = {
+            todos: Firebase.loadTodos(),
+            pagin: Firebase.pagination(1,3)
+        };
+        Promise.all(promise).then((result) {
+            ...
+        });*/
+    }
+  
+    componentWillMount = () =>  {
+  
+    }
+
+    changeCurrentPage = (pageCurrent) => {
+        console.log(pageCurrent);
+        this.setState( (prevState) => {
+            return {
+                currentPage: pageCurrent
+            }
+        })
+    }
+
     addTodo = (value) => {
         var item = {
             id: todoId(), 
@@ -26,12 +74,29 @@ class AppTodo extends React.Component{
             action: value,
             created_at: moment().format('YYYY-MM-DD')
         }
-        Firebase.createTodo(item).then(()=>{
+        var promiseAdd = [
+            Firebase.createTodo(item),
+            Firebase.loadTodos(),
+            Firebase.pagination((this.state.currentPage-1)*this.state.todosPerPage, this.state.currentPage*this.state.todosPerPage)
+        ];
+        Promise.all(promiseAdd).then((newData) => {
+            var total = newData[2].length;
+            var pageNumbers = [];
+            for (let i = 1; i <= Math.ceil(newData[2].length/this.state.todosPerPage); i++) {
+                pageNumbers.push(i);
+            }            
             alert('Thêm thành công');
+            this.setState(() => {
+                return {
+                    todoPages: pageNumbers,
+                    total: total, 
+                    todo:  newData[3],
+                }
+            })
         }).catch( (e) => {
             console.log(e);
             alert('Có lỗi xảy ra');
-        })
+        });
     }
     changeStatus = (newStatus, todoIndex) => {
         this.setState( (prevState) => {
@@ -43,12 +108,22 @@ class AppTodo extends React.Component{
         })
     }
     delTodo = (id) => {
-        Firebase.removeTodo(id).then(()=>{
-            alert('Xóa thành công');
+        var promiseDel = [
+            Firebase.removeTodo(id),
+            Firebase.pagination((this.state.currentPage-1)*this.state.todosPerPage, this.state.currentPage*this.state.todosPerPage)
+        ];
+        Promise.all(promiseDel).then((newData) => {
+            console.log(newData);
+            alert('Thêm thành công');
+            this.setState(() => {
+                return {
+                    todo: newData[1],
+                }
+            })
         }).catch( (e) => {
             console.log(e);
             alert('Có lỗi xảy ra');
-        })
+        });
     }
 
     updateTodo = (key, value, status) => {
@@ -56,45 +131,31 @@ class AppTodo extends React.Component{
             status: status,
             action: value,
         }
-        Firebase.updateTodo(key, item).then(()=> {
+        var promiseDel = [
+            Firebase.updateTodo(key, item),
+            Firebase.pagination((this.state.currentPage-1)*this.state.todosPerPage, this.state.currentPage*this.state.todosPerPage)
+        ];
+        Promise.all(promiseDel).then((newData) => {
+            console.log(newData);
             alert('Thêm thành công');
-        }).catch(()=> {
-            alert('Có lỗi xảy ra');
-        });       
-    }
-
-    render = () => {
-        Firebase.loadTodos().then( (data) => {      
-            this.setState(() => {                
+            this.setState(() => {
                 return {
-                    total: data.length,
-                    todoPages: Math.ceil(data.length/this.state.todoPages)
+                    todo: newData[1],
                 }
-            });
+            })
         }).catch( (e) => {
             console.log(e);
             alert('Có lỗi xảy ra');
-        });
-        console.log(this.state.currentPage);
-        Firebase.pagination(1, 3)
-        .then((data) => { 
-            console.log(data);
-            this.setState(() => {
-                return {
-                    todo: data
-                }
-            })
-        }).catch((e) => {
-            console.log(e);
-            alert('Có lỗi xảy ra');
-        })
-        console.log(this.state.todoPages);
+        });      
+    }
+
+    render = () => {        
         return(
             <div className="container">
                 <Header></Header>  
                 <TodoList todos={this.state.todo} delTodo={this.delTodo} updateTodo={this.updateTodo}
                 changeStatus={this.changeStatus}></TodoList>  
-                <Pagination pageNumers={this.state.todoPages}></Pagination>                        
+                <Pagination pageNumbers={this.state.todoPages} currentPage={this.state.currentPage} changeCurrentPage={this.changeCurrentPage}></Pagination>                        
                 <AddTodo addTodo={this.addTodo}></AddTodo>
                 <Footer></Footer>
             </div>
